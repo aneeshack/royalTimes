@@ -1,4 +1,4 @@
-const {check,validationResult } = require('express-validator')
+const {check, body, validationResult } = require('express-validator')
 
 exports.signupValidator = [
     check('name','Name is required').not().isEmpty(),
@@ -31,5 +31,3 @@ exports.otpMailValidator = [
     gmail_remove_dots:true
   })
 ]
-
-

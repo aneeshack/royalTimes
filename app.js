@@ -15,7 +15,8 @@ const methodOveride = require('method-override')
 const adminValid = require('./middleware/adminValidation')
 const app =express()
 const MongoStore = require('connect-mongo');
-require('./config/passport')
+const checkUser = require('./middleware/checkUser');
+require('./config/passport');
 
 
 app.use(session({
@@ -34,6 +35,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(checkUser);
 
 //bodyparser
 app.use(bodyParser.json())
@@ -85,5 +87,5 @@ app.get('*',(req,res)=>{
 const PORT = process.env.PORT||3000
 
 app.listen(PORT,()=>{
-    console.log(`server is running in the port http://localhost:${PORT}`)
+    console.log(`server is running in the port http://localhost:${PORT}/user/home`)
 })

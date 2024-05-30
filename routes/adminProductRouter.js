@@ -3,7 +3,7 @@ const productRouter = express.Router();
 const adminProductController = require('../controller/adminProductController');
 const valid = require('../middleware/userValidation');
 const passport = require('passport')
-const upload = require('../helpers/multer')
+const upload = require('../helpers/productMulter')
 const adminValid = require('../middleware/adminValidation');
 const { addProductValidator } = require('../helpers/productValidate')
 require('../config/passport')

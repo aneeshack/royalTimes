@@ -183,7 +183,7 @@ const deleteCategory = async(req,res) =>{
     const brand = await categoryModel.findByIdAndDelete(req.params.id)
     if(!brand){
         req.flash('error',"Error in finding the category.");
-        res.redirect('/admin/category')
+        res.redirect('/admin/category');
     }
         req.flash('success','The category is deleted successfully');
         res.redirect('/admin/category')

@@ -1,5 +1,13 @@
 const mongoose =require('mongoose');
 
+const addressSchema = new mongoose.Schema({
+    street:String,
+    city: String,
+    state: String,
+    pinCode : String,
+    country:String
+})
+
 
 const loginSchema = new mongoose.Schema({
     name:{
@@ -10,15 +18,17 @@ const loginSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    phone:{
+    mobileNumber:{
         type:String,
         required:false,
-        validate: {
-            validator: function(v) {
-                return /\d{10}/.test(v);
-            },
-            message: props => `${props.value} is not a valid phone number!`
-        }
+    },
+    gender: {
+        type: String,
+        required: false
+    },
+    profileImage: {
+        type:String,
+        required:false
     },
     password:{
         type:String,
@@ -31,7 +41,8 @@ const loginSchema = new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:true
-    }
+    },
+    address:[addressSchema]
 })
 
 
