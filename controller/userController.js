@@ -2,14 +2,12 @@ require('express');
 const userModel = require('../models/userModel');
 const product = require('../models/product');
 const categoryModel = require('../models/category');
-const brandModel = require('../models/brand')
-const Otp = require('../models/otp')
+const brandModel = require('../models/brand');
+const Otp = require('../models/otp');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-// const path = require('path');
-// const fs = require('fs')
-require('body-parser')
+require('body-parser');
 const { check, validationResult } = require('express-validator');
 const mailer = require('../controller/GoogleAuthController');
 
@@ -576,9 +574,69 @@ const changePass = async(req, res) => {
     }
 }
 
-const cartPage = async(req, res) => {
-    res.render('user/cartPage')
+
+//adding products to the cart list
+const addToCart = async(req, res) => {
+    const { productId } = req.body;
+    try {
+        const products = await product.findById(productId);
+        if(!products){
+            throw new Error('product not found');
+        }
+
+         // Add product ID to cart in session
+         req.session.cart = req.session.cart || [];
+         req.session.cart.push(productId);
+         res.redirect('/user/cart'); 
+
+    } catch (error) {
+        console.log('addtocart error:',error.message);
+
+    } 
 }
+
+//showing cart page
+const cartPage = async(req, res) => {
+    try {
+        if(req.session.isUser){
+        const cartItemIds = req.session.cart || [];
+        const cartItems = await product.find({ _id: { $in: cartItemIds } });
+        res.render('user/cartPage', { cartItems });
+        }else{
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.log('Cart Page error:',error.message);
+        res.redirect('back');
+    }  
+}
+
+
+//deleting products from cart lists
+const deleteCart = async(req, res) => {
+    try {
+        const cart = req.session.cart || [];
+        const productIndex = cart.findIndex(item => item === req.params.id);
+
+        if (productIndex !== -1) {
+            cart.splice(productIndex, 1);
+            req.session.cart = cart;
+            req.flash('success','The cart product is deleted successfully.');
+
+        }else{
+
+            req.flash('error','product not found in the cart.');
+
+        }
+        res.redirect('/user/cart');
+
+    } catch (error) {
+        console.log('delete cart:',error.message);
+        req.flash('error','Error in deleting the cart.');
+        res.redirect('/user/cart');
+    }
+}
+
 
 
 const orderList = async(req, res) => {
@@ -606,6 +664,7 @@ module.exports ={
     deleteAddress,
     changePasswordPage,
     changePass,
-    cartPage
-    
+    cartPage,
+    addToCart,
+    deleteCart
 }

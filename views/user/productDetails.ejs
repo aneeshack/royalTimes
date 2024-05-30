@@ -81,7 +81,12 @@
 							 class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
 						</div> -->
 						<div class="card_area d-flex align-items-center">
-							<a class="primary-btn" href="#">Add to Cart</a>
+							<form action="/user/cart" method="POST">
+								<input type="hidden" name="productId" value="<%= products._id %>">
+								<button class="primary-btn" type="submit">Add to Cart</button>
+							</form>
+							
+							<!-- <a class="primary-btn" href="/user/cart">Add to Cart</a> -->
 							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
 							<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
 						</div>

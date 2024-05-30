@@ -46,9 +46,10 @@ userRouter.get('/address/delete/:id',userController.deleteAddress);
 userRouter.get('/password',userController.changePasswordPage);
 userRouter.post('/password/:id',userController.changePass);
 
+userRouter.post('/cart',userController.addToCart);
+userRouter.get('/cart',userController.cartPage);
+userRouter.get('/deleteCart/:id',userController.deleteCart);
 
 userRouter.get('/orders',userController.orderList);
-userRouter.get('/cart',userController.cartPage);
-
 module.exports =userRouter
     
