@@ -28,14 +28,14 @@
         <div class="col-md-8 ml-5 ">
             <form action="/user/profile/<%= userId %>" method="post" enctype="multipart/form-data" onsubmit="return validateUser()">
                         <h2>Profile Details</h2>
-                        <span id="messageShow" class="bg-danger text-white"></span>
+                        
 
                         <% if(successMessage && successMessage.length >0) { %>
                             <div class="alert alert-success"><%= successMessage %></div>
                         <% } %>
+                        <span id="messageShow" class=" text-danger"></span>
+
                         <div class="profile-image-container">
-                            <!-- Profile Image -->
-                            
                             <img src="/images/userProfile/<%= userData.profileImage %>" alt="profile-image" id="profile-image"  class="profile-image">
                         </div>
                         <input type="file" name="profileImage"  onchange="previewImage(event)">

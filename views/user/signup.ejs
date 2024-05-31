@@ -37,16 +37,16 @@
 							<!-- <a href="/auth/google" class="btn btn-danger w-50  btn-block">Sign up with Google</a> -->
 						</div>
 						<h3>Register to enter</h3>
-						<span id="messageShow" class="bg-danger text-white"></span>
+						<span id="messageShow" class=" text-danger"></span>
 						<% if (locals.message) { %>
-							<span class="bg-danger text-white">
+							<span class=" text-danger">
 								<%= message %>
 							</span>
 							<% } %>
 								<% if (typeof errors !=='undefined' && errors.length> 0) { %>
 									<ul>
 										<% errors.forEach(error=> { %>
-											<li class="bg-danger text-white">
+											<li class=" text-danger">
 												<h2><%= error.msg %></h2>
 											</li>
 											<% }) %>

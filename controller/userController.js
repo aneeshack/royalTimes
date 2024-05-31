@@ -10,7 +10,8 @@ const passport = require('passport');
 require('body-parser');
 const { check, validationResult } = require('express-validator');
 const mailer = require('../controller/GoogleAuthController');
-
+const fs = require('fs');
+const path = require('path');
 
 //render homepage
 const homePage = async(req,res)=>{
@@ -318,43 +319,6 @@ const profilePage = async(req, res) => {
 }
 
 
-//updating the user profile
-// const profileUpdate = async(req, res) => {
-//     try {
-
-//         const user = req.session.isUser
-//         const userData = await userModel.findOne({name:user});
-//         if(!userData){     
-//             return res.render('user/userProfile');
-//         }
-//         if (req.file) {
-//             if (userData.profileImage) {
-//                 const imagePath = path.join(__dirname, '../public/images/userProfile', userData.profileImage);
-//                 fs.unlinkSync(imagePath);
-//             }
-
-//             // Update the profile image in the user document
-//             userData.profileImage = req.file.filename;
-//         }
-//         await userData.save()
-//         const userId = userData._id.toString();
-//         const updateProfile = await userModel.findByIdAndUpdate(userId, {
-//             name: req.body.name,
-//             email: req.body.email,
-//             mobileNumber: req.body.mobileNumber,
-//             gender: req.body.gender,
-//             // profileImage: req.file.filename 
-//         }, { new: true });
-//         req.flash('success','user profile edited successfully.')
-//         res.redirect('/user/profile')
-//     } catch (error) {
-//         console.log('profile update:',error.message);
-//         res.status(500).render('404error', { status: 500, message: 'Internal Server Error' });
-//     }
-// }
-
-const fs = require('fs');
-const path = require('path');
 
 // updating the user profile
 const profileUpdate = async (req, res) => {
@@ -370,7 +334,6 @@ const profileUpdate = async (req, res) => {
                 const imagePath = path.join(__dirname, '../public/images/userProfile', userData.profileImage);
                 fs.unlinkSync(imagePath);
             }
-
             userData.profileImage = req.file.filename;
         }
 
@@ -380,7 +343,7 @@ const profileUpdate = async (req, res) => {
         userData.mobileNumber = req.body.mobileNumber;
         userData.gender = req.body.gender;
         await userData.save();
-
+        req.session.isUser = userData.name;
         req.flash('success', 'user profile edited successfully.');
         res.redirect('/user/profile');
     } catch (error) {
@@ -393,16 +356,12 @@ const profileUpdate = async (req, res) => {
 //user address page
 const addressManage = async(req, res) => {
     try {
-        if(req.session.isUser){
-        const addressId = req.params.id;
-        if(addressId){
-           console.log('error');
-        }else{      
+        if(req.session.isUser){      
             const userName = req.session.isUser;
             const userData = await userModel.findOne({name:userName});
             const userAddress = userData.address;
-            res.render('user/userAddress',{users:userAddress,editMode:false});              
-        }  
+            const userId = userData._id
+            res.render('user/userAddress',{users:userAddress,editMode:false,userId});               
         }
     } catch (error) {
         console.log('address page render:',error.message);
@@ -416,6 +375,7 @@ const addressManage = async(req, res) => {
 const addAddress = async(req, res) => {
     try {
             const user = req.session.isUser;
+            console.log(user)
             const userData = await userModel.findOne({name:user});
             if(userData){
                 const newAddress = {
@@ -601,7 +561,7 @@ const cartPage = async(req, res) => {
         if(req.session.isUser){
         const cartItemIds = req.session.cart || [];
         const cartItems = await product.find({ _id: { $in: cartItemIds } });
-        res.render('user/cartPage', { cartItems });
+        res.render('user/cart', { cartItems });
         }else{
             res.redirect('/user/login');
         }
@@ -611,6 +571,9 @@ const cartPage = async(req, res) => {
     }  
 }
 
+const cart = async(req,res)=>{
+    res.render('user/cart')
+}
 
 //deleting products from cart lists
 const deleteCart = async(req, res) => {
@@ -637,7 +600,13 @@ const deleteCart = async(req, res) => {
     }
 }
 
+const checkoutPage = async(req, res) => {
+  res.render('user/checkoutPage')  
+}
 
+const confirmation = async(req,res)=>{
+    res.render('user/confirmation');
+}
 
 const orderList = async(req, res) => {
     res.render('user/orderList')
@@ -665,6 +634,9 @@ module.exports ={
     changePasswordPage,
     changePass,
     cartPage,
+    cart,
     addToCart,
-    deleteCart
+    deleteCart,
+    checkoutPage,
+    confirmation
 }

@@ -37,7 +37,6 @@ userRouter.get('/api/products',userController.brandFilter);
 //user profile details
 userRouter.get('/profile',userController.profilePage);
 userRouter.post('/profile/:id',upload.single('profileImage'),userController.profileUpdate);
-
 userRouter.get('/address',userController.addressManage);
 userRouter.post('/address/:id',userController.addAddress);
 userRouter.get('/address/edit/:id',userController.addressEditpage);
@@ -46,9 +45,12 @@ userRouter.get('/address/delete/:id',userController.deleteAddress);
 userRouter.get('/password',userController.changePasswordPage);
 userRouter.post('/password/:id',userController.changePass);
 
+//product control routes
 userRouter.post('/cart',userController.addToCart);
 userRouter.get('/cart',userController.cartPage);
 userRouter.get('/deleteCart/:id',userController.deleteCart);
+userRouter.get('/checkout',userController.checkoutPage);
+userRouter.get('/confirmation',userController.confirmation);
 
 userRouter.get('/orders',userController.orderList);
 module.exports =userRouter
