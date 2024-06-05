@@ -3,6 +3,7 @@ const userModel = require('../models/userModel');
 const product = require('../models/product');
 const categoryModel = require('../models/category');
 const brandModel = require('../models/brand');
+const couponModel = require('../models/coupon')
 const Otp = require('../models/otp');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
@@ -543,7 +544,6 @@ const addToCart = async(req, res) => {
         if(!products){
             throw new Error('product not found');
         }
-
          // Add product ID to cart in session
          req.session.cart = req.session.cart || [];
          req.session.cart.push(productId);
@@ -571,9 +571,7 @@ const cartPage = async(req, res) => {
     }  
 }
 
-const cart = async(req,res)=>{
-    res.render('user/cart')
-}
+
 
 //deleting products from cart lists
 const deleteCart = async(req, res) => {
@@ -600,8 +598,36 @@ const deleteCart = async(req, res) => {
     }
 }
 
+
+//price details showing dynamically in checkout page
+const totalPrice = async (req, res) => {
+    let total = 0;
+    const cartItemIds = req.session.cart || [];
+    const cartItems = await product.find({ _id: { $in: cartItemIds } });
+
+    cartItems.forEach(item => {
+        const quantity = req.body.quantities[item._id] || 1;
+        total += item.price * quantity;
+    });
+
+    res.json({ totalPrice: total });
+};
+
+
+//checkoutpage rendering
 const checkoutPage = async(req, res) => {
-  res.render('user/checkoutPage')  
+    try {
+        if(req.session.isUser){
+            const userName = req.session.isUser;
+            userData = await userModel.findOne({name: userName});
+            const coupon = await couponModel.find()
+            const userAddress = userData.address;
+            const userId = userData._id
+            res.render('user/checkoutPage',{users:userAddress,userData,coupon})  
+        }
+    } catch (error) {
+        
+    }
 }
 
 const confirmation = async(req,res)=>{
@@ -634,9 +660,9 @@ module.exports ={
     changePasswordPage,
     changePass,
     cartPage,
-    cart,
     addToCart,
     deleteCart,
     checkoutPage,
-    confirmation
+    confirmation,
+    totalPrice
 }

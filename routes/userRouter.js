@@ -48,6 +48,7 @@ userRouter.post('/password/:id',userController.changePass);
 //product control routes
 userRouter.post('/cart',userController.addToCart);
 userRouter.get('/cart',userController.cartPage);
+userRouter.post('/total',userController.totalPrice);
 userRouter.get('/deleteCart/:id',userController.deleteCart);
 userRouter.get('/checkout',userController.checkoutPage);
 userRouter.get('/confirmation',userController.confirmation);

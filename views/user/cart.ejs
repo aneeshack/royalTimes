@@ -1,7 +1,6 @@
 <%- include('../layouts/user/header',{title:"cart-Page"}) %>
 
-  <!-- Start Banner Area -->
-  <section class="banner-area organic-breadcrumb">
+<section class="banner-area organic-breadcrumb">
     <div class="container">
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
@@ -14,9 +13,7 @@
         </div>
     </div>
 </section>
-<!-- End Banner Area -->
 
-<!--================Cart Area =================-->
 <section class="cart_area">
     <div class="container">
         <div class="cart_inner">
@@ -24,101 +21,88 @@
                 <table class="table">
                     <thead>
                         <tr>
-
                             <th scope="col">Product</th>
                             <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Total</th>
-                            
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% if(cartItems && cartItems.length>0) { %>
                             <% cartItems.forEach(item => { %>
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="<%= item.images[0] %>" alt="<%= item.productName %>" class="img-thumbnail" style="width: 50px;">
-                                    </div>
-                                    <div class="media-body">
-                                        <p><%= item.productName %></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h5>$<%= item.price %>.00 </h5>
-                            </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1"  title="Quantity:"
-                                        class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                        class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                        class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                </div>
-                            </td>
-                            
-                            <td>
-                                <h5>$720.00</h5>
-                            </td>
-                            <td>
-                                <td><button type="button" class="btn primary-btn btn-sm delete-btn" data-type="product" data-id="<%= item._id %>">Delete</button></td>
-                            </td>
-                            
-                            <% }) %>
-                        </tr>
-                        <% }else{ %>
                             <tr>
-                                <td colspan="6"><h3>No products found.</h3></td>
-             
-                                
+                                <td>
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            <img src="<%= item.images[0] %>" alt="<%= item.productName %>" class="img-thumbnail" style="width: 50px;">
+                                        </div>
+                                        <div class="media-body">
+                                            <p><%= item.productName %></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h4>$<%= item.price %>.00</h4>
+                                </td>
+                                <td>
+                                    <div class="product">
+                                        <button onclick="updateQuantity(this, 'decrease', <%= item.price %>)" class="reduced items-count" type="button">-</button>
+                                        <input type="text" name="qty" class="quantity" value="1" title="Quantity" class="input-text qty" data-price="<%= item.price %>" data-id="<%= item._id %>" onchange="updateTotal(this)">
+                                        <button onclick="updateQuantity(this, 'increase', <%= item.price %>)" class="increase items-count" type="button">+</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h4 class="item-total">$<%= item.price %>.00</h4>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn primary-btn btn-sm delete-btn" data-id="<%= item._id %>">Delete</button>
+                                </td>
                             </tr>
-                            <% } %>
-                        
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5"><h3>No products found.</h3></td>
+                            </tr>
+                        <% } %>
                         <tr class="bottom_button">
                             <td>
-                                <a class="gray_btn" href="#">Update Cart</a>
+                                <a class="gray_btn" id="updateCartBtn" href="/user/category">Update Cart</a>
                             </td>
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
+                            <td></td>
+                            <td></td>
+                            <!-- <td>
                                 <div class="cupon_text d-flex align-items-center">
                                     <input type="text" placeholder="Coupon Code">
                                     <a class="primary-btn" href="#">Apply</a>
                                     <a class="gray_btn" href="#">Close Coupon</a>
                                 </div>
-                            </td>
+                            </td> -->
                         </tr>
                         <tr>
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-                                <h5>Subtotal</h5>
-                            </td>
-                            <td>
-                                <h5>$2160.00</h5>
-                            </td>
+                            <td></td>
+                            <td></td>
+                            <td><h4>Price(items)</h4>
+                            <br>
+                            <h4>Discount</h4>
+                            <br>
+                            <h4>Delivery Charge</h4></td>
+                            <td><h4 class="subtotal">$0.00</h4>
+                            <br>
+                            <h4 id="subtotal">$0.00</h4>
+                            <br>
+                            <h4 id="subtotal"><del>₹230</del>&nbsp;&nbsp;<span style="color: green;">Free</span></h4></td>
                         </tr>
-                        <tr class="shipping_area">
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-                                <h5>Shipping</h5>
-                            </td>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><h3 class="color-blue">TOTAL AMOUNT</h3></td>
+                            <td><h3 class="subtotal">$0.00</h3></td>
+                        </tr>
+                        <!-- <tr class="shipping_area">
+                            <td></td>
+                            <td></td>
+                            <td><h5>Shipping</h5></td>
                             <td>
                                 <div class="shipping_box">
                                     <ul class="list">
@@ -142,45 +126,82 @@
                                     <a class="gray_btn" href="#">Update Details</a>
                                 </div>
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr class="out_button_area">
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <div class="checkout_btn_inner d-flex align-items-center">
-                                    <a class="gray_btn" href="#">Continue Shopping</a>
+                                    <a class="gray_btn" href="/user/category">Continue Shopping</a>
                                     <a class="primary-btn" href="/user/checkout">Proceed to checkout</a>
                                 </div>
                             </td>
                         </tr>
-                       
                     </tbody>
-
                 </table>
             </div>
         </div>
     </div>
 </section>
 
+<style>
+    .product {
+        display: flex;
+        align-items: center;
+    }
+    .product input {
+        text-align: center;
+        width: 50px;
+        margin: 0 10px;
+    }
+    .product button {
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+</style>
 
 <script>
-    
-    //to show confirmation message while deleting product in cart list
-    document.querySelector('.delete-btn').addEventListener('click', function() {
-        const type = this.dataset.type;
-        const id = this.dataset.id;
-        const confirmation = confirm(`Are you sure you want to delete this ${type} from the cart list?`);
-        if (confirmation) {
-            window.location.href = `/user/deleteCart/${id}`;
-        }
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const confirmation = confirm(`Are you sure you want to delete this product from the cart?`);
+            if (confirmation) {
+                window.location.href = `/user/deleteCart/${id}`;
+            }
+        });
     });
+
+    function updateQuantity(button, action, price) {
+        const input = action === 'increase' ? button.previousElementSibling : button.nextElementSibling;
+        let value = parseInt(input.value);
+        if (!isNaN(value)) {
+            value = action === 'increase' ? value + 1 : (value > 1 ? value - 1 : 1);
+            input.value = value;
+            updateTotal(input);
+        }
+    }
+
+    function updateTotal(input) {
+        const price = parseFloat(input.dataset.price);
+        const quantity = parseInt(input.value);
+        const itemTotal = price * quantity;
+        input.closest('tr').querySelector('.item-total').innerText = '$' + itemTotal.toFixed(2);
+        updateSubtotal();
+    }
+
+    function updateSubtotal() {
+        let subtotal = 0;
+        document.querySelectorAll('.item-total').forEach(itemTotal => {
+            subtotal += parseFloat(itemTotal.innerText.replace('$', ''));
+        });
+        // document.getElementById('subtotal').innerText = '$' + subtotal.toFixed(2);
+        document.querySelectorAll('.subtotal').forEach(subtotalElement => {
+                subtotalElement.innerText = '₹' + subtotal.toFixed(2);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', updateSubtotal);
 </script>
-<!--================End Cart Area =================-->
+
 <%- include('../layouts/user/footer') %>

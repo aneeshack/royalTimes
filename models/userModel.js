@@ -42,6 +42,10 @@ const loginSchema = new mongoose.Schema({
         type:Boolean,
         default:true
     },
+    company:{
+        type : String,
+        required : false
+    },
     address:[addressSchema]
 })
 

@@ -21,11 +21,12 @@
         <div class="container">
             <div class="returning_customer">
                 <div class="check_title">
-                    <h2>Returning Customer? <a href="#">Click here to login</a></h2>
+                    <h2>Delivery address</h2>
+                    <!-- <h2>Delivery address<a href="">Click here to login</a></h2> -->
                 </div>
-                <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new
-                    customer, please proceed to the Billing & Shipping section.</p>
-                <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                <p>If you have shopped with us before, please ensure your address for delivery is correct. If you are a new
+                    customer, please include your address.</p>
+                <!-- <form class="row contact_form" action="#" method="post" novalidate="novalidate">
                     <div class="col-md-6 form-group p_star">
                         <input type="text" class="form-control" id="name" name="name">
                         <span class="placeholder" data-placeholder="Username or Email"></span>
@@ -42,11 +43,34 @@
                         </div>
                         <a class="lost_pass" href="#">Lost your password?</a>
                     </div>
-                </form>
+                </form> -->
+                
+                <% if(userData && users && users.length>0) { %>
+                    <% users.forEach((address, index) => { %>
+                      <div class="address-container ">
+                        <label>
+                            <input type="radio" name="selectedAddress" value="<%= address._id %>">
+                            <%= userData.name %> | <%= userData.mobileNumber %>
+                        </label>
+                        <ul></ul>
+                          <ul><%= address.street %>, <%= address.city %>,<%= address.state %>, <%= address.country %>,</ul>
+                          <ul><%= address.pinCode %></ul>
+                          <!-- <div class="button-container">
+                              <a href="/user/address/edit/"><button class="edit-btn"  >Edit</button></a>
+                              <button type="button" class="btn btn-danger btn-sm delete-btn" data-type="address" data-id="<%= address._id %>" >Delete</button>
+                            </div> -->
+                     
+                    
+                      <% }); %> 
+                      <% }else{ %>
+                        <h5 style="color: #a7a1a1cb;">No address found, Add your address.</h5>
+                        <% } %>
+                    </div>
+              
             </div>
             <div class="cupon_area">
                 <div class="check_title">
-                    <h2>Have a coupon? <a href="#">Click here to enter your code</a></h2>
+                    <h2>Have a coupon? <a href="#" id="couponLink">Click here to enter your code</a></h2>
                 </div>
                 <input type="text" placeholder="Enter coupon code">
                 <a class="tp_btn" href="#">Apply Coupon</a>
@@ -56,13 +80,16 @@
                     <div class="col-lg-8">
                         <h3>Billing Details</h3>
                         <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-                            <div class="col-md-6 form-group p_star">
+                            <!-- <div class="col-md-6 form-group p_star">
                                 <input type="text" class="form-control" id="first" name="name">
                                 <span class="placeholder" data-placeholder="First name"></span>
-                            </div>
-                            <div class="col-md-6 form-group p_star">
+                            </div> -->
+                            <!-- <div class="col-md-6 form-group p_star">
                                 <input type="text" class="form-control" id="last" name="name">
                                 <span class="placeholder" data-placeholder="Last name"></span>
+                            </div> -->
+                            <div class="col-md-12 form-group">
+                                <input type="text" class="form-control" id="company" name="company" placeholder="Enter your name">
                             </div>
                             <div class="col-md-12 form-group">
                                 <input type="text" class="form-control" id="company" name="company" placeholder="Company name">
@@ -166,6 +193,45 @@
         </div>
     </section>
     <!--================End Checkout Area =================-->
-
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const couponLink = document.getElementById('couponLink');
+        
+            couponLink.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent the default link behavior (i.e., navigating to a new page)
+        
+                // Fetch available coupons from the server or use predefined coupons
+                const availableCoupons = ['Coupon1', 'Coupon2', 'Coupon3'];
+        
+                // Create a select element with options for each coupon
+                const selectElement = document.createElement('select');
+                availableCoupons.forEach(coupon => {
+                    const option = document.createElement('option');
+                    option.value = coupon;
+                    option.textContent = coupon;
+                    selectElement.appendChild(option);
+                });
+        
+                // Show SweetAlert modal with the form for entering the coupon code
+                Swal.fire({
+                    title: 'Enter Coupon Code',
+                    html: `
+                        <form id="couponForm">
+                            <label for="coupon">Coupon:</label>
+                            ${selectElement.outerHTML}
+                        </form>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Apply Coupon',
+                    preConfirm: () => {
+                        const couponCode = document.getElementById('couponForm').elements['coupon'].value;
+                        // You can handle applying the coupon code here, such as sending it to the server for validation
+                        console.log('Applied Coupon:', couponCode);
+                    }
+                });
+            });
+        });
+        </script>
+        
 <%- include('../layouts/user/footer') %>
